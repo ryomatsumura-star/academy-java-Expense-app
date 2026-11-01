@@ -5,12 +5,15 @@
         return;
     }
 
+     const template = container.querySelector('.detail-row')?.cloneNode(true);
+
     addButton.addEventListener('click', function () {
-        const firstRow = container.querySelector('.detail-row');
-        if (!firstRow) {
+        const clone = template.cloneNode(true);
+
+        if (!template) {
             return;
         }
-        const clone = firstRow.cloneNode(true);
+
         clone.querySelectorAll('input, select, textarea').forEach(function (input) {
             if (input.tagName === 'SELECT') {
                 input.selectedIndex = 0;
@@ -28,7 +31,7 @@
             return;
         }
         const rows = container.querySelectorAll('.detail-row');
-        if (rows.length <= 1) {
+        if (rows.length < 1) {
             return;
         }
         button.closest('.detail-row').remove();

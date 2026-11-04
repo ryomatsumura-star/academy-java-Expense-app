@@ -63,6 +63,14 @@ public class ReceiptStorageService {
         if (!StringUtils.hasText(filePath)) {
             return;
         }
+        Path path = receiptBaseDir.resolve(filePath).normalize();
+        if (path.startsWith(receiptBaseDir) && Files.isRegularFile(path)) {
+            try {
+                Files.delete(path);
+            } catch (IOException ignored) {
+                return;
+            }
+        }
     }
 
     public Path resolvePath(String filePath) {
@@ -100,6 +108,18 @@ public class ReceiptStorageService {
 
     public void deleteExpenseFiles(Integer expenseId) {
         if (expenseId == null) {
+            return;
+        }
+        Path expenseDir = receiptBaseDir.resolve(String.valueOf(expenseId)).normalize();
+        if (!expenseDir.startsWith(receiptBaseDir) || !Files.isDirectory(expenseDir)) {
+            return;
+        }
+        try (Stream<Path> paths = Files.list(expenseDir)) {
+            paths.filter(Files::isRegularFile)
+            .forEach(path -> deleteFile(
+                receiptBaseDir.relativize(path).toString()
+            ));
+        } catch (IOException ignored) {
             return;
         }
     }

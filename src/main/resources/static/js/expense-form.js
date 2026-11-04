@@ -5,7 +5,7 @@
         return;
     }
 
-     const template = container.querySelector('.detail-row')?.cloneNode(true);
+    const template = container.querySelector('.detail-row')?.cloneNode(true);
 
     addButton.addEventListener('click', function () {
         const clone = template.cloneNode(true);

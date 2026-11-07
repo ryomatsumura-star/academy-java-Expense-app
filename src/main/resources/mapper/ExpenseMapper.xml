@@ -142,13 +142,6 @@
             AND (
                 e.title LIKE CONCAT('%', #{keyword}, '%') ESCAPE '|'
                 OR u.user_name LIKE CONCAT('%', #{keyword}, '%') ESCAPE '|'
-                OR CASE u.user_name
-                    WHEN 'yamada' THEN '山田'
-                    WHEN 'sato' THEN '佐藤'
-                    WHEN 'takahashi' THEN '高橋'
-                    WHEN 'ito' THEN '伊藤'
-                    WHEN 'suzuki' THEN '鈴木'
-                END LIKE CONCAT('%', #{keyword}, '%') ESCAPE '|'
             )
         </if>
     </sql>

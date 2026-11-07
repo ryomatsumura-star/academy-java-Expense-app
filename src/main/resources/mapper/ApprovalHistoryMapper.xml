@@ -38,4 +38,15 @@
         WHERE ah.expense_id = #{expenseId}
         ORDER BY ah.created_at, ah.history_id
     </select>
+
+    <select id="existsApprovedByUser" resultType="boolean">
+    SELECT EXISTS (
+        SELECT 1
+        FROM approval_histories
+        WHERE expense_id = #{expenseId}
+          AND approver_user_id = #{approverUserId}
+          AND action = 'APPROVE'
+        )
+    </select>
+
 </mapper>

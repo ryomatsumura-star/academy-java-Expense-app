@@ -3,6 +3,7 @@ package com.example.expenseapp.security;
 import com.example.expenseapp.entity.Expense;
 import com.example.expenseapp.mapper.ApprovalRouteMapper;
 import com.example.expenseapp.mapper.ExpenseMapper;
+import com.example.expenseapp.mapper.ApprovalHistoryMapper;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,12 +17,16 @@ public class ExpenseAuthorizationService {
 
     private final ExpenseMapper expenseMapper;
     private final ApprovalRouteMapper approvalRouteMapper;
+    private final ApprovalHistoryMapper approvalHistoryMapper;
 
     public ExpenseAuthorizationService(
             ExpenseMapper expenseMapper,
-            ApprovalRouteMapper approvalRouteMapper) {
+            ApprovalRouteMapper approvalRouteMapper,
+            ApprovalHistoryMapper approvalHistoryMapper) {
+
         this.expenseMapper = expenseMapper;
         this.approvalRouteMapper = approvalRouteMapper;
+        this.approvalHistoryMapper = approvalHistoryMapper;
     }
 
     public boolean canView(Integer expenseId, LoginUser loginUser) {
@@ -45,7 +50,11 @@ public class ExpenseAuthorizationService {
             return false;
         }
         Integer deptId = expense.getApplicant().getDeptId();
-        return matchesCurrentStep(deptId, expenseId, loginUser, false);
+        return matchesCurrentStep(deptId, expenseId, loginUser, false)
+                || approvalHistoryMapper.existsApprovedByUser(
+                        expenseId,
+                        loginUser.getUserId()
+        );
     }
 
     public boolean canEdit(Integer expenseId, LoginUser loginUser) {

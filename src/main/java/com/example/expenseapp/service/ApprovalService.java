@@ -100,12 +100,6 @@ public class ApprovalService {
         Expense expense = requirePendingExpenseForApproval(expenseId, approver, version);
         requireCurrentStep(expense);
 
-        if (!StringUtils.hasText(comment)) {
-            throw new IllegalArgumentException(
-                    messages.get("validation.comment.required")
-            );
-        }
-
         approvalHistoryRecorder.record(
                 expenseId,
                 approver.getUserId(),

@@ -56,8 +56,7 @@ public class ApprovalController {
             Model model) {
         var expense = approvalService.getExpenseForApprover(expenseId, loginUser);
         model.addAttribute("expense", expense);
-        model.addAttribute("canApprove", expense.getStatus().isPending()
-                && expenseAuthorizationService.isRouteMember(expenseId, loginUser));
+        model.addAttribute("canApprove", expenseAuthorizationService.canApprove(expenseId, loginUser));
         if (!model.containsAttribute("approvalForm")) {
             model.addAttribute("approvalForm", new ApprovalForm(expense.getVersion()));
         }

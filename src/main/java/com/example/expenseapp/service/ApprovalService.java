@@ -66,8 +66,7 @@ public class ApprovalService {
     public Expense getExpenseForApprover(Integer expenseId, LoginUser approver) {
         Expense expense = expenseMapper.findAccessibleByApprover(expenseId, approver.getUserId())
                 .orElseThrow(() -> new ExpenseNotFoundException(expenseId));
-        if (expenseAuthorizationService.canView(expenseId, approver)
-                || expenseAuthorizationService.isUpcomingApprover(expenseId, approver)) {
+        if (expenseAuthorizationService.canView(expenseId, approver)) {
             return expense;
         }
         throw new AccessDeniedException(messages.get("error.access.denied"));
@@ -99,6 +98,12 @@ public class ApprovalService {
     public Expense reject(Integer expenseId, LoginUser approver, Integer version, String comment) {
         Expense expense = requirePendingExpenseForApproval(expenseId, approver, version);
         requireCurrentStep(expense);
+
+        if (!StringUtils.hasText(comment)) {
+            throw new IllegalArgumentException(
+                    messages.get("validation.comment.required")
+            );
+        }
 
         approvalHistoryRecorder.record(
                 expenseId,

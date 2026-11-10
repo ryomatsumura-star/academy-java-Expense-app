@@ -150,7 +150,13 @@
         SELECT COUNT(*) + 1
         FROM approval_histories ah_step
         WHERE ah_step.expense_id = e.expense_id
-          AND ah_step.action IN ('APPROVE', 'REJECT')
+          AND ah_step.action = 'APPROVE'
+          AND ah_step.history_id > COALESCE((
+            SELECT MAX(sub.history_id)
+            FROM approval_histories sub
+            WHERE sub.expense_id = e.expense_id
+            AND sub.action = 'SUBMIT'
+        ), 0)
     </sql>
 
     <sql id="currentApprovalStepExists">

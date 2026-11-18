@@ -51,10 +51,9 @@
               WHERE ah.expense_id = #{expenseId}
                 AND ah.action = 'APPROVE'
                 AND ah.history_id > COALESCE((
-                    SELECT MAX(sub.history_id)
-                    FROM approval_histories sub
-                    WHERE sub.expense_id = #{expenseId}
-                      AND sub.action = 'SUBMIT'
+                    <include refid="lastSubmitHistoryId">
+                        <property name="expenseRef" value="#{expenseId}"/>
+                    </include>
                 ), 0)
           )
     </select>

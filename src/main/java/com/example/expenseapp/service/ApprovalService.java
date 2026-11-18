@@ -128,6 +128,10 @@ public class ApprovalService {
         if (!expense.getStatus().isPending()) {
             throw new InvalidExpenseStateException(expense.getStatus(), "expense.operation.approve");
         }
+        if (!expenseAuthorizationService.canApprove(expenseId, approver)) {
+            throw new AccessDeniedException(messages.get("error.access.denied"));
+        }
+
         return expense;
     }
 

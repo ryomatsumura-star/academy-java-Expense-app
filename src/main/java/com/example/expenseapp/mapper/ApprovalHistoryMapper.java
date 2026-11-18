@@ -12,4 +12,8 @@ public interface ApprovalHistoryMapper {
     int insert(ApprovalHistory history);
 
     List<ApprovalHistory> findByExpenseId(@Param("expenseId") Integer expenseId);
+    boolean existsApprovedByUser(
+        @Param("expenseId") Integer expenseId,
+        @Param("approverUserId") Integer approverUserId
+    );
 }

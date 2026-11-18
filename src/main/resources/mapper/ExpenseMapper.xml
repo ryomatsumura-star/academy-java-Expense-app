@@ -146,11 +146,23 @@
         </if>
     </sql>
 
+    <sql id="lastSubmitAt">
+        SELECT MAX(sub.created_at)
+        FROM approval_histories sub
+        WHERE sub.expense_id = ${expenseRef}
+        AND sub.action = 'SUBMIT'
+    </sql>
+
     <sql id="approvesSinceLastSubmit">
         SELECT COUNT(*) + 1
         FROM approval_histories ah_step
         WHERE ah_step.expense_id = e.expense_id
-          AND ah_step.action IN ('APPROVE', 'REJECT')
+          AND ah_step.action = 'APPROVE'
+          AND ah_step.history_id > COALESCE((
+            <include refid="lastSubmitHistoryId">
+                <property name="expenseRef" value="e.expense_id"/>
+            </include>
+        ), 0)
     </sql>
 
     <sql id="currentApprovalStepExists">

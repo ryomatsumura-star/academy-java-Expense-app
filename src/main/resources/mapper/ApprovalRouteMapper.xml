@@ -49,7 +49,12 @@
               SELECT COUNT(*) + 1
               FROM approval_histories ah
               WHERE ah.expense_id = #{expenseId}
-                AND ah.action IN ('APPROVE', 'REJECT')
+                AND ah.action = 'APPROVE'
+                AND ah.history_id > COALESCE((
+                    <include refid="lastSubmitHistoryId">
+                        <property name="expenseRef" value="#{expenseId}"/>
+                    </include>
+                ), 0)
           )
     </select>
 </mapper>

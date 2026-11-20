@@ -159,7 +159,7 @@
         WHERE ah_step.expense_id = e.expense_id
           AND ah_step.action = 'APPROVE'
           AND ah_step.history_id > COALESCE((
-            <include refid="lastSubmitHistoryId">
+            <include refid="lastSubmitAt">
                 <property name="expenseRef" value="e.expense_id"/>
             </include>
         ), 0)

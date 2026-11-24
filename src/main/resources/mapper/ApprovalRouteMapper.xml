@@ -51,7 +51,7 @@
               WHERE ah.expense_id = #{expenseId}
                 AND ah.action = 'APPROVE'
                 AND ah.history_id > COALESCE((
-                    <include refid="lastSubmitHistoryId">
+                    <include refid="com.example.expenseapp.mapper.ExpenseMapper.lastSubmitAt">
                         <property name="expenseRef" value="#{expenseId}"/>
                     </include>
                 ), 0)

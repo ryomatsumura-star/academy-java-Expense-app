@@ -101,13 +101,21 @@ public class ExpenseController {
     @PreAuthorize("@expenseAuthorizationService.canEdit(#expenseId, authentication.principal)")
     public String showEditForm(
             @PathVariable Integer expenseId,
+            @RequestParam(value = "version", required = false) Integer detailVersion,
             @AuthenticationPrincipal LoginUser loginUser,
             Model model) {
         var expense = expenseService.getExpenseForOwner(expenseId, loginUser);
         if (!expense.getStatus().isEditable()) {
             return "redirect:/expenses/" + expenseId;
         }
-        prepareFormModel(model, expenseFormMapper.fromExpense(expense));
+
+        ExpenseForm form = expenseFormMapper.fromExpense(expense);
+
+        if (detailVersion != null) {
+            form.setVersion(detailVersion);
+        }
+
+        prepareFormModel(model, form);
         return "expenses/form";
     }
 

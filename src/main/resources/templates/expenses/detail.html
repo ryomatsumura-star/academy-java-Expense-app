@@ -16,7 +16,7 @@
                 <a th:href="@{/expenses}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i><span th:text="#{common.back}">戻る</span>
                 </a>
-                <a th:if="${editable}" th:href="@{/expenses/{id}/edit(id=${expense.expenseId})}" class="btn btn-outline-primary">
+                <a th:if="${editable}" th:href="@{/expenses/{id}/edit(id=${expense.expenseId},version=${expense.version})}" class="btn btn-outline-primary">
                     <i class="bi bi-pencil me-1"></i><span th:text="#{common.edit}">編集</span>
                 </a>
             </div>
